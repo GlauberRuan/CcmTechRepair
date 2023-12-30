@@ -2,20 +2,21 @@ import { AppDataSource } from "../db/data-source";
 import { NextFunction, Request, Response } from "express";
 import "reflect-metadata";
 import { Requests_clients } from '../Models/Requests_clients';
+import { Request_items } from '../Models/Request_items';
+
+
 
 
 export class RequestCliController {
 
     private Request_ClientsRepository = AppDataSource.getRepository(Requests_clients)
 
+    private Request_itemsRepository = AppDataSource.getRepository(Request_items)
+
 
 
     async all(request: Request, response: Response, next: NextFunction) {
-        return this.Request_ClientsRepository.find({
-            relations: {
-                requisItem: false,
-            },
-        })
+        return this.Request_ClientsRepository.find()
     }
 
     async one(request: Request, response: Response, next: NextFunction) {
@@ -45,20 +46,30 @@ export class RequestCliController {
         return this.Request_ClientsRepository.save(requests)
     }
 
-    async put(request: Request, response: Response, next: NextFunction) {
-        const  id  = parseInt(request.params.id);
-        const { situation } = request.body;
+    async update(request: Request, response: Response, next: NextFunction) {
+        const id = parseInt(request.params.id);
 
-        const registroExistente = await this.Request_ClientsRepository.findOne({ where: { id } });
+        const { id_client, situation, data_abertura, requisItem } = request.body;
 
-        if (!registroExistente) {
-            return "Esta requisição não existe!!!"
+        const findRequest = await this.Request_ClientsRepository.findOneBy({ id });
+
+        if (!findRequest) {
+            return "Registro não encontrado!";
         }
 
-        registroExistente.situation = situation;
-        await this.Request_ClientsRepository.save(registroExistente)
+        const reqCliItem = Object.assign(findRequest, requisItem )
 
+        reqCliItem.id_client = id_client;
+        reqCliItem.situation = situation;
+        reqCliItem.data_abertura = data_abertura;
+        reqCliItem.requisItem = requisItem;
+        
+
+        await this.Request_ClientsRepository.save(reqCliItem);
+
+        return "Registro atualizado com sucesso!";
     }
+
 
     async remove(request: Request, response: Response, next: NextFunction) {
         const id = parseInt(request.params.id)

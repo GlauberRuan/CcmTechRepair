@@ -4,6 +4,7 @@ import { Client } from '../Models/Client';
 
 
 
+
 export class ClientController {
 
     private ClientRepository = AppDataSource.getRepository(Client)
@@ -27,7 +28,7 @@ export class ClientController {
     }
 
     async create(request: Request, response: Response, next: NextFunction) {
-        const { tipo, cpf, cnpj, email, nome_razao, nome_responsavel, fone_responsavel, nome_contato_1, fone_contato_1, nome_contato_2, fone_contato_2, clisystem, address} = request.body;
+        const { tipo, cpf, cnpj, email, nome_razao, nome_responsavel, fone_responsavel, nome_contato_1, fone_contato_1, nome_contato_2, fone_contato_2, clisystem, clientAd} = request.body;
 
         const client = Object.assign(new Client(), {
             tipo, 
@@ -41,11 +42,43 @@ export class ClientController {
             fone_contato_1,     
             nome_contato_2,     
             fone_contato_2,
-            clisystem,
-            address,
+            clientAd,
+            clisystem,   
         })
 
         return this.ClientRepository.save(client)
+    }
+
+    async update(request: Request, response: Response, next: NextFunction) {
+        const id = parseInt(request.params.id);
+
+        const { tipo, cpf, cnpj, email, nome_razao, nome_responsavel, fone_responsavel, nome_contato_1, fone_contato_1, nome_contato_2, fone_contato_2, clisystem, clientAd } = request.body;
+
+        const findClient = await this.ClientRepository.findOneBy({ id });
+
+        if (!findClient) {
+            return "Cliente não encontrado!";
+        }
+
+        const CliSytemAd = Object.assign(findClient, clisystem, clientAd  )
+
+        CliSytemAd.tipo = tipo;
+        CliSytemAd.cpf = cpf;
+        CliSytemAd.cnpj = cnpj;
+        CliSytemAd.nome_razao = nome_razao;
+        CliSytemAd.email = email;
+        CliSytemAd.nome_responsavel = nome_responsavel; 
+        CliSytemAd.fone_responsavel = fone_responsavel;
+        CliSytemAd.nome_contato_1 = nome_contato_1;
+        CliSytemAd.fone_contato_1 = fone_contato_1;
+        CliSytemAd.nome_contato_2 = nome_contato_2;
+        CliSytemAd.fone_contato_1 = fone_contato_2;
+        CliSytemAd.clisystem = clisystem;
+        CliSytemAd.clientAd = clientAd;
+
+        await this.ClientRepository.save(CliSytemAd);
+
+        return "Cliente atualizado com sucesso!";
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {

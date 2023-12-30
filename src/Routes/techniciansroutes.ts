@@ -1,6 +1,8 @@
 
 import { techniciansController } from "../controller/techniciansController"
 
+
+
 export const Routes = [{
     method: "get",
     route: "/technicians",
@@ -15,8 +17,14 @@ export const Routes = [{
     method: "post",
     route: "/technicians",
     controller: techniciansController,
-    action: "save"
-}, {
+    action: "create"
+}, 
+{
+    method: "put",
+    route: "/technicians/:id",
+    controller: techniciansController,
+    action: "update"
+},{
     method: "delete",
     route: "/technicians/:id",
     controller: techniciansController,

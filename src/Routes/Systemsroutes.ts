@@ -1,6 +1,7 @@
 
 import { SystemsController } from "../controller/SystemsController"
 
+
 export const Routes = [{
     method: "get",
     route: "/Systems",
@@ -17,6 +18,11 @@ export const Routes = [{
     controller: SystemsController,
     action: "save"
 }, {
+    method: "put",
+    route: "/Systems/:id",
+    controller: SystemsController,
+    action: "update"
+},{
     method: "delete",
     route: "/Systems/:id",
     controller: SystemsController,

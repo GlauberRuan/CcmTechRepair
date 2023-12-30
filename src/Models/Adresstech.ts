@@ -1,12 +1,12 @@
 import "reflect-metadata"
-import { Client } from './Client';
+import { Technicians } from './technicians';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm"
 
 
 
 
 @Entity()
-export class Address {
+export class Addresstech {
     
     @PrimaryGeneratedColumn()
     id: number
@@ -32,10 +32,13 @@ export class Address {
     @Column({ type: "varchar" })
     uf: string
 
-    @ManyToOne(() => Client, (clientAddress) => clientAddress.clientAd, {
+    @Column({ type: "varchar" })
+    fone_contato:  string
+
+    @ManyToOne(() => Technicians, (techAddress) => techAddress.techAd, { 
         onDelete: 'CASCADE',
     })
-    clientAd: Client
+    techAd: Technicians;
 
    
 }

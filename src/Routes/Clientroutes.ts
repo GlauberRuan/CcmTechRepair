@@ -1,6 +1,7 @@
 
 import { ClientController } from "../controller/ClientsController"
 
+
 export const Routes = [{
     method: "get",
     route: "/client",
@@ -17,6 +18,11 @@ export const Routes = [{
     controller: ClientController,
     action: "create"
 }, {
+    method: "put",
+    route: "/client/:id",
+    controller: ClientController,
+    action: "update"
+},{
     method: "delete",
     route: "/client/:id",
     controller: ClientController,

@@ -1,6 +1,7 @@
 
 import { RequestCliController } from "../controller/RequestCliController"
 
+
 export const Routes = [{
     method: "get",
     route: "/RequestClient",
@@ -20,7 +21,7 @@ export const Routes = [{
     method: "put",
     route: "/RequestClient/:id",
     controller: RequestCliController,
-    action: "put"
+    action: "update"
 },{
     method: "delete",
     route: "/RequestClient/:id",

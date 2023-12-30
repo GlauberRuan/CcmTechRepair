@@ -4,6 +4,7 @@ import { Address } from "./Adress";
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 
 
+
 @Entity()
 export class Client {
 
@@ -43,11 +44,11 @@ export class Client {
     @Column({ type: "varchar" })
     fone_contato_2:  string
 
-    @OneToMany(() => Address, (addressCli) => addressCli.client, { 
+    @OneToMany(() => Address, (addressCli) => addressCli.clientAd, { 
         cascade: true,
         eager: true,
     })
-    address: Address[]
+    clientAd: Address[]
 
     @OneToMany(() => Client_Systems, (clisystem) => clisystem.client, { 
         cascade: true,
