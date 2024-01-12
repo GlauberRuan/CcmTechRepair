@@ -26,47 +26,71 @@ export class SystemsController {
     }
 
     async save(request: Request, response: Response, next: NextFunction) {
-        const { nome, descricao } = request.body;
 
-        const client = Object.assign(new Systems(), {
-            nome, 
-            descricao 
-        })
+        try {
 
-        return this.SystemsRepository.save(client)
+            const { nome, descricao } = request.body;
+
+            const client = Object.assign(new Systems(), {
+                nome,
+                descricao
+            })
+
+            return this.SystemsRepository.save(client)
+
+        } catch (error) {
+
+            return response.status(500).json({ error: 'Erro interno durante a inclusão!' });
+        }
     }
 
     async update(request: Request, response: Response, next: NextFunction) {
-        const  id  = parseInt(request.params.id);
-        const { nome, descricao } = request.body;
 
-        const findSystem = await this.SystemsRepository.findOneBy({ id });
+        try {
 
-        if (!findSystem) {
-            return "Registro não encontrado!";
+            const id = parseInt(request.params.id);
+            const { nome, descricao } = request.body;
+
+            const findSystem = await this.SystemsRepository.findOneBy({ id });
+
+            if (!findSystem) {
+                return "Registro não encontrado!";
+            }
+
+            findSystem.nome = nome;
+            findSystem.descricao = descricao;
+
+            await this.SystemsRepository.update(id, findSystem);
+
+            return "Sistema atualizado com sucesso!";
+
+        } catch (error) {
+
+            return response.status(500).json({ error: 'Erro interno durante a atualização!' });
         }
-
-        findSystem.nome = nome;
-        findSystem.descricao = descricao;
-
-        await this.SystemsRepository.update(id, findSystem);
-
-        return "Sistema atualizado com sucesso!";
 
     }
 
     async remove(request: Request, response: Response, next: NextFunction) {
-        const id = parseInt(request.params.id)
 
-        let systemsToRemove = await this.SystemsRepository.findOneBy({ id })
+        try {
 
-        if (!systemsToRemove) {
-            return "Este sistema não existe!!!"
+            const id = parseInt(request.params.id)
+
+            let systemsToRemove = await this.SystemsRepository.findOneBy({ id })
+
+            if (!systemsToRemove) {
+                return "Este sistema não existe!!!"
+            }
+
+            await this.SystemsRepository.remove(systemsToRemove)
+
+            return "O Sistema foi removido!!!"
+
+        } catch (error) {
+
+            return response.status(500).json({ error: 'Erro interno durante a exclusão!' });
         }
 
-        await this.SystemsRepository.remove(systemsToRemove)
-
-        return "O Sistema foi removido!!!"
     }
-
 }

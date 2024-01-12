@@ -16,13 +16,15 @@
     "mysql2": "^3.6.5",
     "nodemailer": "^6.9.7",
     "reflect-metadata": "^0.1.13",
+    "start": "^5.1.0",
     "typeorm": "0.3.17"
   },
   "scripts": {
     "start": "ts-node src/index.ts",
-    "typeorm": "typeorm-ts-node-commonjs"
+    "typeorm": "typeorm-ts-node-commonjs",
+    "dev": "ts-node src/index.ts"
   },
-  "main": "index.js",
+  "main": "index.ts",
   "author": "",
   "license": "ISC"
 }

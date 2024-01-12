@@ -1,12 +1,12 @@
 import { AppDataSource } from "../db/data-source"
 import { NextFunction, Request, Response } from "express"
 import { Technicians } from '../Models/technicians';
-import { Addresstech } from '../Models/Adresstech';
+
 
 export class techniciansController {
 
   private techniciansRepository = AppDataSource.getRepository(Technicians)
-  private adresstechRepository = AppDataSource.getRepository(Addresstech)
+
 
   async all(request: Request, response: Response, next: NextFunction) {
     return this.techniciansRepository.find()
@@ -27,52 +27,79 @@ export class techniciansController {
   }
 
   async create(request: Request, response: Response, next: NextFunction) {
-    const { nome, cpf, techAd } = request.body;
 
-    const items = Object.assign(new Technicians(), {
-      nome,
-      cpf,
-      techAd,
+    try {
 
-    })
+      const { nome, cpf, techAd } = request.body;
 
-    return this.techniciansRepository.save(items)
+      const items = Object.assign(new Technicians(), {
+        nome,
+        cpf,
+        techAd,
+
+      })
+
+      return this.techniciansRepository.save(items)
+    } catch (error) {
+
+      return response.status(500).json({ error: 'Erro interno durante a inclusão!' });
+    }
+
   }
 
   async update(request: Request, response: Response, next: NextFunction) {
-    const id = parseInt(request.params.id);
 
-    const { nome, cpf, techAd } = request.body;
+    try {
 
-    const findTech = await this.techniciansRepository.findOneBy({ id });
+      const id = parseInt(request.params.id);
 
-    if (!findTech) {
+      const { nome, cpf, techAd } = request.body;
+
+      const findTech = await this.techniciansRepository.findOneBy({ id });
+
+      if (!findTech) {
         return "Técnico não encontrado!";
+      }
+
+      const technAd = Object.assign(findTech, techAd)
+
+      technAd.nome = nome;
+      technAd.cpf = cpf;
+      technAd.techAd = techAd;
+
+      await this.techniciansRepository.save(technAd);
+
+      return "Técnico atualizado com sucesso!";
+
+
+    } catch (error) {
+
+      return response.status(500).json({ error: 'Erro interno durante a atualização!' });
     }
 
-    const technAd = Object.assign(findTech, techAd )
-
-    technAd.nome = nome;
-    technAd.cpf = cpf;
-    technAd.techAd = techAd;
-    
-    await this.techniciansRepository.save(technAd);
-
-    return "Técnico atualizado com sucesso!";
-}
+  }
 
   async remove(request: Request, response: Response, next: NextFunction) {
-    const id = parseInt(request.params.id)
 
-    let techniciansToRemove = await this.techniciansRepository.findOneBy({ id })
+    try {
 
-    if (!techniciansToRemove) {
-      return "Este técnico não existe!!!"
+      const id = parseInt(request.params.id)
+
+      let techniciansToRemove = await this.techniciansRepository.findOneBy({ id })
+
+      if (!techniciansToRemove) {
+        return "Este técnico não existe!!!"
+      }
+
+      await this.techniciansRepository.remove(techniciansToRemove)
+
+      return "O técnico foi removido!!!"
+
+    } catch (error) {
+
+      return response.status(500).json({ error: 'Erro interno durante a exclusão!' });
     }
 
-    await this.techniciansRepository.remove(techniciansToRemove)
-
-    return "O técnico foi removido!!!"
   }
 
 }

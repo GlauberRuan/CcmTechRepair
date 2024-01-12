@@ -15,6 +15,9 @@ export class Requests_clients {
     @Column({ type: "date" })
     data_abertura: Date
 
+    @Column({ type: "varchar" })
+    email:  string
+
     @Column( {type: "varchar", default: "EM ANDAMENTO" })
     situation: string
 
